@@ -1,0 +1,7 @@
+<div class="alert alert-{{type}} alert-dismissible pc-alert fade show" ng-style="{'position': position}" role="alert">
+    <strong><i class="fas fa-info-circle"></i></strong>
+    <ng-transclude></ng-transclude>
+    <button type="button" class="close" ng-class="{'ng-hide': closeModal === true}" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>

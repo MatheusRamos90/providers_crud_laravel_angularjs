@@ -1,0 +1,115 @@
+<div ng-controller="createProvidersController" ng-cloak>
+
+    <section class="pc-wrapper expand_wrapper">
+        <div class="row">
+            <div class="col">
+                <h5>Cadastro de Fornecedores</h5>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <a ng-href="/companies/create" class="btn btn-primary pc-button"><i class="fas fa-plus"></i> Nova empresa</a>
+
+                            <form name="formCreateProviders" ng-submit="submitCreateProvider(formCreateProviders.$valid)" novalidate>
+                                <div class="row mt-3 mb-2">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Empresa *</label>
+                                            <select class="form-control" ng-change="isParana()" name="empresa" ng-class="{'is-invalid': formCreateProviders.empresa.$invalid && formCreateProviders.empresa.$touched}" ng-model="form_create.empresa" required>
+                                                <option value="{{companie.id}}" ng-repeat="companie in companies">{{ companie.nome_fantasia }}</option>
+                                            </select>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.empresa.$error.required">O campo é obrigatório.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Nome *</label>
+                                            <input type="text" class="form-control" ng-class="{'is-invalid': formCreateProviders.nome.$invalid && formCreateProviders.nome.$touched}" ng-model="form_create.nome" name="nome" required ng-minlength="5">
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.nome.$error.required">O campo é obrigatório.</p>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.nome.$error.minlength">O campo deve ter no mínimo 5 caracteres.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Telefone *</label>
+                                            <input type="text" min="0" class="form-control" ng-class="{'is-invalid': formCreateProviders.telefone.$invalid && formCreateProviders.telefone.$touched}" ng-model="form_create.telefone" name="telefone" required pc-telefone>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.telefone.$error.required">O campo é obrigatório.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label>Pessoa física / Pessoa jurídica *</label>
+                                            </div>
+                                        </div>
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-primary">
+                                                <input type="radio" class="pc-button" ng-change="isJuridica()" name="tipo_pessoa" ng-class="{'is-invalid': formCreateProviders.tipo_pessoa.$invalid && formCreateProviders.tipo_pessoa.$touched}" ng-model="form_create.tipo_pessoa" value="fisica" autocomplete="off" required> Pessoa física
+                                            </label>
+                                            <label class="btn btn-primary">
+                                                <input type="radio" class="pc-button" ng-change="isJuridica()" name="tipo_pessoa" ng-class="{'is-invalid': formCreateProviders.tipo_pessoa.$invalid && formCreateProviders.tipo_pessoa.$touched}" ng-model="form_create.tipo_pessoa" value="juridica" autocomplete="off" required> Pessoa jurídica
+                                            </label>
+                                        </div>
+                                        <div ng-messages="formCreateProviders.tipo_pessoa.$error">
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.tipo_pessoa.$error.required">O campo é obrigatório.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-6" ng-if="form_create.tipo_pessoa == 'fisica'">
+                                        <div class="form-group">
+                                            <label>CPF *</label>
+                                            <input type="text" class="form-control" ng-class="{'is-invalid': formCreateProviders.nro_documento.$invalid && formCreateProviders.nro_documento.$touched}" ng-model="form_create.nro_documento" name="nro_documento" required pc-cpf>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.nro_documento.$error.required">O campo é obrigatório.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6" ng-if="form_create.tipo_pessoa == 'fisica'">
+                                        <div class="form-group">
+                                            <label>RG *</label>
+                                            <input type="text" min="0" class="form-control" ng-class="{'is-invalid': formCreateProviders.nro_rg.$invalid && formCreateProviders.nro_rg.$touched}" ng-model="form_create.nro_rg" name="nro_rg" required>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.nro_rg.$error.required">O campo é obrigatório.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6" ng-if="form_create.tipo_pessoa == 'juridica'">
+                                        <div class="form-group">
+                                            <label>CNPJ *</label>
+                                            <input type="text" class="form-control" ng-class="{'is-invalid': formCreateProviders.nro_documento.$invalid && formCreateProviders.nro_documento.$touched}" ng-model="form_create.nro_documento" name="nro_documento" ng-minlength="18" ng-maxlength="18" required pc-cnpj>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.nro_documento.$error.required">O campo é obrigatório.</p>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.nro_documento.$error.minlength">O campo deve conter 18 caracteres e apenas números.</p>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.nro_documento.$error.maxlength">O campo deve conter 18 caracteres e apenas números.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-6" ng-if="form_create.tipo_pessoa == 'fisica'">
+                                        <div class="form-group">
+                                            <label>Data de Nascimento *</label>
+                                            <input type="date" class="form-control" ng-change="isMinorAge()" ng-class="{'is-invalid': formCreateProviders.data_nascimento.$invalid && formCreateProviders.data_nascimento.$touched || (minor_age === true && is_parana === true)}" ng-model="form_create.data_nascimento" name="data_nascimento" required>
+                                            <p class="invalid-feedback" ng-show="formCreateProviders.data_nascimento.$error.required">O campo é obrigatório.</p>
+                                            <p class="invalid-feedback" ng-show="(minor_age === true && is_parana === true)">O fornecedor que for do Paraná não pode ser menor de idade.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="float-right mt-3">
+                                    <a ng-href="/" class="btn btn-light pc-button">Cancelar</a>
+                                    <button type="submit" ng-disabled="!formCreateProviders.$valid || (minor_age === true && is_parana === true)" class="btn btn-success pc-button">Salvar</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#nro123').mask('00/00/0000');
+    });
+</script>

@@ -1,0 +1,231 @@
+<div ng-controller="listProvidersController" ng-cloak>
+
+    <section class="pc-wrapper expand_wrapper">
+        <!-- Providers -->
+        <div class="row">
+            <div class="col">
+                <h5>Fornecedores cadastrados</h5>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <a ng-href="/providers/create" class="btn btn-primary pc-button"><i class="fas fa-plus"></i> Novo fornecedor</a>
+                            <button type="button" class="btn btn-primary pc-button float-right" data-toggle="modal" data-target="#modalFilter"><i class="fas fa-filter"></i> Filtrar</button>
+                            <button type="button" ng-click="cleanFilters()" class="btn btn-light pc-button float-right mr-2"><i class="fas fa-sync-alt"></i> Limpar filtros</button>
+
+                            <div class="table-responsive mt-3">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Empresa</th>
+                                            <th>Nome</th>
+                                            <th>Telefone</th>
+                                            <th>Tipo</th>
+                                            <th>N° CPF/CNPJ</th>
+                                            <th>Data de Nascimento</th>
+                                            <th>Data do Cadastro</th>
+                                            <th>Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="p in providers">
+                                            <td>{{ p.id }}</td>
+                                            <td>{{ p.nome_fantasia }}</td>
+                                            <td>{{ p.nome }}</td>
+                                            <td>{{ p.telefone }}</td>
+                                            <td>{{ p.tipo_pessoa }}</td>
+                                            <td>{{ p.nro_documento }}</td>
+                                            <td>{{ p.data_nascimento }}</td>
+                                            <td>{{ p.data_cadastro }}</td>
+                                            <td>
+                                                <button type="button" ng-click="remove_provider_(p, p.id)" class="btn btn-danger pc-button" data-toggle="tooltip" onmouseenter="$(this).tooltip('show')" data-placement="left" title="Remover item"><i class="fas fa-trash"></i></button>
+                                                <button type="button" ng-click="edit_(p.id)" class="btn btn-info pc-button" data-toggle="tooltip" onmouseenter="$(this).tooltip('show')" data-placement="left" title="Editar item"><i class="fas fa-edit"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <p class="mt-3">
+                                    <b>Resultados:</b> <span ng-bind="providers.length"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Companies -->
+        <div class="row mt-5">
+            <div class="col">
+                <h5>Empresas cadastradas</h5>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <a ng-href="/companies/create" class="btn btn-primary pc-button"><i class="fas fa-plus"></i> Nova Empresa</a>
+
+                            <div class="table-responsive mt-3">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Estado (UF)</th>
+                                        <th>Nome fantasia</th>
+                                        <th>N° CNPJ</th>
+                                        <th>Data do Cadastro</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="c in companies">
+                                        <td>{{ c.id }}</td>
+                                        <td>{{ c.estado }}</td>
+                                        <td>{{ c.nome_fantasia }}</td>
+                                        <td>{{ c.cnpj }}</td>
+                                        <td>{{ c.data_cadastro }}</td>
+                                        <td>
+                                            <button type="button" ng-click="remove_companie_(c, c.id)" class="btn btn-danger pc-button" data-toggle="tooltip" onmouseenter="$(this).tooltip('show')" data-placement="left" title="Remover item"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <p class="mt-3">
+                                    <b>Resultados:</b> <span ng-bind="companies.length"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Filter -->
+    <div class="modal" id="modalFilter" tabindex="-1" role="dialog" aria-labelledby="modalFilter" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalFilterTitle">Filtrar por:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form name="formFilterBy" ng-submit="submitFilterBy(formFilterBy.$valid)" novalidate>
+                        <pc-alert type="info" position="relative" close-modal="true">Pelo menos um dos campos abaixo é obrigatório</pc-alert>
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" class="form-control" ng-model="form_filter.nome" name="nome">
+                        </div>
+                        <div class="form-group">
+                            <label>N° Documento (CPF/CNPJ)</label>
+                            <input type="text" class="form-control" ng-model="form_filter.nro_documento" ng-class="{'is-invalid': formFilterBy.nro_documento.$invalid && formFilterBy.nro_documento.$touched}" name="nro_documento">
+                        </div>
+                        <div class="form-group">
+                            <label>Data do Cadastro</label>
+                            <input type="date" class="form-control" ng-model="form_filter.data_cadastro" name="data_cadastro">
+                        </div>
+
+                        <div class="mt-3 float-right">
+                            <button type="button" class="btn btn-light pc-button" data-dismiss="modal">Fechar</button>
+                            <button type="submit" ng-disabled="!form_filter.nome && !form_filter.nro_documento && !form_filter.data_cadastro" class="btn btn-success pc-button">Filtrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Provider -->
+    <div class="modal" id="modalEditProvider" tabindex="-1" role="dialog" aria-labelledby="modalEditProvider" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditProviderTitle">Editar fornecedor:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form name="formEditProvider" ng-submit="submitEditProvider(formEditProvider.$valid)" novalidate>
+
+                        <div class="form-group">
+                            <label>Empresa *</label>
+                            <select class="form-control" ng-change="isParana()" name="empresa" ng-class="{'is-invalid': formEditProvider.empresa.$invalid && formEditProvider.empresa.$touched}" ng-model="form_edit.empresa" required>
+                                <option value="{{companie.id}}" ng-repeat="companie in companies" ng-selected="companie.id === form_edit.id_empresa">{{ companie.nome_fantasia }}</option>
+                            </select>
+                            <p class="invalid-feedback" ng-show="formEditProvider.empresa.$error.required">O campo é obrigatório.</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Nome *</label>
+                            <input type="text" class="form-control" ng-class="{'is-invalid': formEditProvider.nome.$invalid && formEditProvider.nome.$touched}" ng-model="form_edit.nome" name="nome" required ng-minlength="5">
+                            <p class="invalid-feedback" ng-show="formEditProvider.nome.$error.required">O campo é obrigatório.</p>
+                            <p class="invalid-feedback" ng-show="formEditProvider.nome.$error.minlength">O campo deve ter no mínimo 5 caracteres.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Telefone *</label>
+                            <input type="text" min="0" class="form-control" ng-class="{'is-invalid': formEditProvider.telefone.$invalid && formEditProvider.telefone.$touched}" ng-model="form_edit.telefone" name="telefone" required pc-telefone>
+                            <p class="invalid-feedback" ng-show="formEditProvider.telefone.$error.required">O campo é obrigatório.</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label>Pessoa física / Pessoa jurídica *</label>
+                            </div>
+                        </div>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-primary" ng-class="{'active': form_edit.tipo_pessoa == 'fisica'}">
+                                <input type="radio" class="pc-button" ng-change="isJuridica()" name="tipo_pessoa" ng-class="{'is-invalid': formEditProvider.tipo_pessoa.$invalid && formEditProvider.tipo_pessoa.$touched}" ng-model="form_edit.tipo_pessoa" value="fisica" autocomplete="off" required> Pessoa física
+                            </label>
+                            <label class="btn btn-primary" ng-class="{'active': form_edit.tipo_pessoa == 'juridica'}">
+                                <input type="radio" class="pc-button" ng-change="isJuridica()" name="tipo_pessoa" ng-class="{'is-invalid': formEditProvider.tipo_pessoa.$invalid && formEditProvider.tipo_pessoa.$touched}" ng-model="form_edit.tipo_pessoa" value="juridica" autocomplete="off" required> Pessoa jurídica
+                            </label>
+                        </div>
+                        <div ng-messages="formEditProvider.tipo_pessoa.$error">
+                            <p class="invalid-feedback" ng-show="formEditProvider.tipo_pessoa.$error.required">O campo é obrigatório.</p>
+                        </div>
+                        
+                        <div class="form-group mt-3" ng-if="form_edit.tipo_pessoa == 'fisica'">
+                            <label>CPF *</label>
+                            <input type="text" class="form-control" ng-class="{'is-invalid': formEditProvider.nro_documento.$invalid && formEditProvider.nro_documento.$touched}" ng-model="form_edit.nro_documento" name="nro_documento" required pc-cpf>
+                            <p class="invalid-feedback" ng-show="formEditProvider.nro_documento.$error.required">O campo é obrigatório.</p>
+                        </div>
+
+                        <div class="form-group" ng-if="form_edit.tipo_pessoa == 'fisica'">
+                            <label>RG *</label>
+                            <input type="text" min="0" class="form-control" ng-class="{'is-invalid': formEditProvider.nro_rg.$invalid && formEditProvider.nro_rg.$touched}" ng-model="form_edit.nro_rg" name="nro_rg" required>
+                            <p class="invalid-feedback" ng-show="formEditProvider.nro_rg.$error.required">O campo é obrigatório.</p>
+                        </div>
+
+                        <div class="form-group mt-3" ng-if="form_edit.tipo_pessoa == 'juridica'">
+                            <label>CNPJ *</label>
+                            <input type="text" class="form-control" ng-class="{'is-invalid': formEditProvider.nro_documento.$invalid && formEditProvider.nro_documento.$touched}" ng-model="form_edit.nro_documento" name="nro_documento" ng-minlength="18" ng-maxlength="18" required pc-cnpj>
+                            <p class="invalid-feedback" ng-show="formEditProvider.nro_documento.$error.required">O campo é obrigatório.</p>
+                            <p class="invalid-feedback" ng-show="formEditProvider.nro_documento.$error.minlength">O campo deve conter 18 caracteres e apenas números.</p>
+                            <p class="invalid-feedback" ng-show="formEditProvider.nro_documento.$error.maxlength">O campo deve conter 18 caracteres e apenas números.</p>
+                        </div>
+
+                        <div class="form-group" ng-if="form_edit.tipo_pessoa == 'fisica'">
+                            <label>Data de Nascimento *</label>
+                            <input type="date" class="form-control" ng-change="isMinorAge()" ng-class="{'is-invalid': formEditProvider.data_nascimento.$invalid && formEditProvider.data_nascimento.$touched || (minor_age === true && is_parana === true)}" ng-model="form_edit.data_nascimento" name="data_nascimento" required>
+                            <p class="invalid-feedback" ng-show="formEditProvider.data_nascimento.$error.required">O campo é obrigatório.</p>
+                            <p class="invalid-feedback" ng-show="(minor_age === true && is_parana === true)">O fornecedor que for do Paraná não pode ser menor de idade.</p>
+                        </div>
+
+                        <div class="float-right mt-3">
+                            <button type="button" class="btn btn-light pc-button" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" ng-disabled="!formEditProvider.$valid || (minor_age === true && is_parana === true)" class="btn btn-success pc-button">Salvar</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

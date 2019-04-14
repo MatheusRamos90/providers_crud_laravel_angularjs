@@ -1,0 +1,83 @@
+<div ng-controller="createCompaniesController" ng-cloak>
+
+    <section class="pc-wrapper expand_wrapper">
+        <div class="row">
+            <div class="col">
+                <h5>Cadastro de Empresa</h5>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <a ng-href="/providers/create" class="btn btn-primary pc-button"><i class="fas fa-plus"></i> Novo fornecedor</a>
+
+                            <form name="formCreateCompanies" ng-submit="submitCreate(formCreateCompanies.$valid)" novalidate>
+                                <div class="row mt-3 mb-2">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>UF (Estado) *</label>
+                                            <select class="form-control" name="estado" ng-class="{'is-invalid': formCreateCompanies.estado.$invalid && formCreateCompanies.estado.$touched}" ng-model="form_create.estado" required>
+                                                <option value="AC">Acre</option>
+                                                <option value="AL">Alagoas</option>
+                                                <option value="AP">Amapá</option>
+                                                <option value="AM">Amazonas</option>
+                                                <option value="BA">Bahia</option>
+                                                <option value="CE">Ceará</option>
+                                                <option value="DF">Distrito Federal</option>
+                                                <option value="ES">Espírito Santo</option>
+                                                <option value="GO">Goiás</option>
+                                                <option value="MA">Maranhão</option>
+                                                <option value="MT">Mato Grosso</option>
+                                                <option value="MS">Mato Grosso do Sul</option>
+                                                <option value="MG">Minas Gerais</option>
+                                                <option value="PA">Pará</option>
+                                                <option value="PB">Paraíba</option>
+                                                <option value="PR">Paraná</option>
+                                                <option value="PE">Pernambuco</option>
+                                                <option value="PI">Piauí</option>
+                                                <option value="RJ">Rio de Janeiro</option>
+                                                <option value="RN">Rio Grande do Norte</option>
+                                                <option value="RS">Rio Grande do Sul</option>
+                                                <option value="RO">Rondônia</option>
+                                                <option value="RR">Roraima</option>
+                                                <option value="SC">Santa Catarina</option>
+                                                <option value="SP">São Paulo</option>
+                                                <option value="SE">Sergipe</option>
+                                                <option value="TO">Tocantins</option>
+                                            </select>
+                                            <p class="invalid-feedback" ng-show="formCreateCompanies.estado.$error.required">O campo é obrigatório.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Nome fantasia *</label>
+                                            <input type="text" class="form-control" ng-class="{'is-invalid': formCreateCompanies.nome_fantasia.$invalid && formCreateCompanies.nome_fantasia.$touched}" ng-model="form_create.nome_fantasia" name="nome_fantasia" required ng-minlength="5">
+                                            <p class="invalid-feedback" ng-show="formCreateCompanies.nome_fantasia.$error.required">O campo é obrigatório.</p>
+                                            <p class="invalid-feedback" ng-show="formCreateCompanies.nome_fantasia.$error.minlength">O campo deve ter no mínimo 5 caracteres.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 mb-2">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>CNPJ *</label>
+                                            <input type="text" class="form-control" ng-class="{'is-invalid': formCreateCompanies.cnpj.$invalid && formCreateCompanies.cnpj.$touched}" ng-model="form_create.cnpj" name="cnpj" ng-minlength="18" ng-maxlength="18" required pc-cnpj>
+                                            <p class="invalid-feedback" ng-show="formCreateCompanies.cnpj.$error.required">O campo é obrigatório.</p>
+                                            <p class="invalid-feedback" ng-show="formCreateCompanies.cnpj.$error.minlength">O campo deve conter 18 caracteres e apenas números.</p>
+                                            <p class="invalid-feedback" ng-show="formCreateCompanies.cnpj.$error.maxlength">O campo deve conter 18 caracteres e apenas números.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="float-right mt-3">
+                                    <a ng-href="/" class="btn btn-light pc-button">Cancelar</a>
+                                    <button type="submit" ng-disabled="!formCreateCompanies.$valid" class="btn btn-success pc-button">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
